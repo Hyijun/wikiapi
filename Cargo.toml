@@ -1,0 +1,16 @@
+[package]
+name = "wikiapi"
+version = "0.1.0"
+authors = ["Hyijun <1823144292@qq.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+reqwest = "0.10.7"
+futures = "0.3"
+tokio = "0.2.22"
+regex = "1"
+rustc-serialize = "0.3.18"
+chrono = "0.4"
+lazy_static = "1.4.0"
