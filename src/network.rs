@@ -5,6 +5,9 @@ use reqwest::Client;
 use reqwest::Proxy;
 use std::error::Error;
 use tokio::runtime::Runtime;
+use futures::{Future, AsyncWriteExt};
+use std::fmt::Formatter;
+use std::error;
 
 pub fn get_text_directly(url: String) -> String{
     async fn get_(url_:String) -> Result<String, Box<dyn Error>>{
@@ -19,7 +22,7 @@ pub fn get_text_directly(url: String) -> String{
         .block_on(get_(url)).unwrap()
 }
 
-pub fn get_text(url:String, client:&Client) -> String{
+pub fn get_text(url:String, client:&Client) -> Result<String, Box<NetworkError>>{
     async fn get_(url_:String, c:&Client) -> Result<String, Box<dyn Error>>{
         let resp  = c.get(&url_)
             .send()
@@ -28,9 +31,9 @@ pub fn get_text(url:String, client:&Client) -> String{
             .await?;
         Ok(resp)
     }
-    Runtime::new()
+   Runtime::new()
         .expect("在建立tokio运行时时出错")
-        .block_on(get_(url, client)).unwrap()
+        .block_on(get_(url, client)).map_err(|e| -> Box<NetworkError> {Box::new(NetworkError)})
 }
 
 ///
@@ -74,3 +77,13 @@ pub fn build_normal_client() -> Client{
         .expect("在建立tokio运行时时出错")
         .block_on(create()).unwrap()
 }
+
+#[derive(Debug)]
+pub struct NetworkError;
+
+impl std::fmt::Display for NetworkError{
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Network request failed")
+    }
+}
+

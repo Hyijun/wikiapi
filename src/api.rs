@@ -85,7 +85,8 @@ impl AllowToCheckFilterMatch for Logid{
 impl Wiki {
     //fixme 这里的返回值传递需要下功夫研究一番
     pub fn api(&self, parameter:String) -> String{
-        get(self.get_url_prefix() + "api.php?action=" + &parameter, &self.proxy)
+        // get(self.get_url_prefix() + "api.php?action=" + &parameter, &self.proxy)
+        "".to_owned()
     }
 
     pub async fn abuse_filter_check_match<T: AllowToCheckFilterMatch>(&self, filter: String, target: T) ->Result<String, Box<dyn Error>> {
